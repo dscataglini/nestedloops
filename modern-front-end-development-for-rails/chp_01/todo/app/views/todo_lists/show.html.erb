@@ -1,0 +1,40 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <%= @todo_list.title %>
+</p>
+<% if @todo_list.todo_items.pending.any? %>
+  <p>  
+    <strong><%=pluralize @todo_list.todo_items.pending.count, "Pending item" %><strong>
+    <ul>
+      <% @todo_list.todo_items.pending.all.each do |todo| %>
+        <li>
+          <%= todo.description %>
+          <%= link_to "edit", edit_todo_item_path(todo) %>
+          |
+          <%= link_to "complete", toggle_completed_todo_item_path(todo) %>
+        </li>
+      <% end %>
+    </ul>
+  </p>
+<% end %>
+
+<% if @todo_list.todo_items.completed.any? %>
+  <p>    
+    <strong><%=pluralize @todo_list.todo_items.completed.count, "Completed item" %><strong>
+    <ul>
+      <% @todo_list.todo_items.completed.each do |todo| %>
+        <li>
+          <%= todo.description %>
+          <%= link_to "edit", edit_todo_item_path(todo) %>
+          |
+          <%= link_to "uncomplete", toggle_completed_todo_item_path(todo) %>
+        </li>
+      <% end %>
+    </ul>  
+  </p>
+<% end %>
+  
+<%= link_to 'Add todo item', new_todo_list_todo_item_path(@todo_list)%> |
+<%= link_to 'Edit', edit_todo_list_path(@todo_list) %> |
+<%= link_to 'Back', todo_lists_path %>
