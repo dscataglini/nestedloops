@@ -1,0 +1,36 @@
+<%= turbo_frame_tag(dom_id(todo_item)) do %>
+<%= form_with(model: todo_item, data: { "turbo-frame": params[:inline] == 'true' ?  dom_id(todo_item) : "_top"}) do |form| %>
+  <% if todo_item.errors.any? %>
+    <div id="error_explanation">
+      test
+      <h2><%= pluralize(todo_item.errors.count, "error") %> prohibited this todo_item from being saved:</h2>
+
+      <ul>
+        <% todo_item.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= hidden_field_tag :inline, params[:inline] %>
+    <%= form.label :description %>
+    <%= form.text_field :description %>
+  </div>
+
+  <% if @todo_item.todo_list_id %>
+    <div class="field">
+      <%= form.hidden_field :todo_list_id, value: form.object.todo_list_id %>
+    </div>
+  <% else %>
+    <div class="field">
+      <%= form.label :todo_list_id, "Todo List" %>
+      <%= form.select :todo_list_id, TodoList.all.pluck(:title,:id) %>
+    </div>
+  <% end %>
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>
+<% end %>

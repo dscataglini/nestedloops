@@ -1,0 +1,73 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <%= render @todo_list %>
+</p>
+<% if @todo_list.todo_items.pending.any? %>
+  <p>  
+    <strong><%=pluralize @todo_list.todo_items.pending.count, "Pending item" %><strong>
+    <ul>
+      <% @todo_list.todo_items.pending.all.each do |todo_item| %>
+        <li>
+          <%= render todo_item, locals: { inline: true } %>
+          <%= link_to "edit", 
+                      edit_todo_item_path(todo_item, inline: true),
+                      data: {
+                        "turbo-frame": dom_id(todo_item)
+                      }
+                       %>
+          |
+          <% if todo_item.completed? %>
+              <%= link_to "uncomplete", toggle_completed_todo_item_path(todo_item, inline: true), 
+              data: {
+                "turbo-frame": "_top"
+              } %>
+          <% else %>
+            <%= link_to "complete", toggle_completed_todo_item_path(todo_item, inline: true), 
+              data: {
+                "turbo-frame": "_top"
+              } %>
+          <% end %>
+          
+        </li>
+      <% end %>
+    </ul>
+  </p>
+<% end %>
+
+<% if @todo_list.todo_items.completed.any? %>
+  <p>    
+    <strong><%=pluralize @todo_list.todo_items.completed.count, "Completed item" %><strong>
+    <ul>
+      <% @todo_list.todo_items.completed.each do |todo_item| %>
+        <li>
+          <%= render todo_item %>
+            <%= link_to "edit", 
+                        edit_todo_item_path(todo_item, inline: params[:inline].present?),
+                        data: {
+                          "turbo-frame": dom_id(todo_item)
+                        }
+                         %>
+            |
+            <% if todo_item.completed? %>
+                <%= link_to "uncomplete", toggle_completed_todo_item_path(todo_item, inline: params[:inline].present?), 
+                data: {
+                  "turbo-frame": "_top"
+                } %>
+            <% else %>
+              <%= link_to "complete", toggle_completed_todo_item_path(todo_item, inline: params[:inline].present?), 
+                data: {
+                  "turbo-frame": "_top"
+                } %>
+            <% end %>
+          
+          </li>
+        </li>
+      <% end %>
+    </ul>  
+  </p>
+<% end %>
+  
+<%= link_to 'Add todo item', new_todo_list_todo_item_path(@todo_list)%> |
+<%= link_to 'Edit', edit_todo_list_path(@todo_list) %> |
+<%= link_to 'Back', todo_lists_path %>
